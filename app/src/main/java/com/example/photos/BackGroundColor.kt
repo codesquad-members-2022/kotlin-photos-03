@@ -1,4 +1,4 @@
-package model
+package com.example.photos
 
 import android.graphics.Color
 
