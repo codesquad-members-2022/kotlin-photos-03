@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">photos</string>
+    <string name="app_bar_title">Photos</string>
 </resources>
