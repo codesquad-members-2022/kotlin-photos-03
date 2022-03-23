@@ -1,7 +1,7 @@
 package com.example.photos
 
 import android.os.Bundle
-import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val photoList = mutableListOf<Photo>()
-        findViewById<Button>(R.id.btn_gallery).setOnClickListener {
+        findViewById<ImageButton>(R.id.ibtn_add_photo).setOnClickListener {
             val photo = Photo(id, uri)
             photoList.add(photo)
         }
