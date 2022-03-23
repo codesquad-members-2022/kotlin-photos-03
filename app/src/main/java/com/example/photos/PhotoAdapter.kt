@@ -3,14 +3,16 @@ package com.example.photos
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class PhotoAdapter(private val colorList:List<Int>) : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
-
+class PhotoAdapter(diffCallback: DiffUtil.ItemCallback<Photo>) : ListAdapter<Photo, PhotoAdapter.ViewHolder>(diffCallback){
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
-        private  val item= itemView.findViewById<View>(R.id.iv_item)
-        fun bind(color:Int){
-            item.setBackgroundColor(color)
+        private  val item : ImageView = itemView.findViewById<View>(R.id.iv_item) as ImageView
+        fun bind(photo:Photo){
+            item.setImageURI(photo.uri)
         }
     }
 
@@ -20,11 +22,7 @@ class PhotoAdapter(private val colorList:List<Int>) : RecyclerView.Adapter<Photo
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(colorList[position])
-    }
-
-    override fun getItemCount(): Int {
-        return colorList.size
+        holder.bind(getItem(position))
     }
 
 
