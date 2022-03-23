@@ -12,8 +12,6 @@ class PhotoAdapter(diffCallback: DiffUtil.ItemCallback<Photo>) : ListAdapter<Pho
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         private  val item : ImageView = itemView.findViewById<View>(R.id.iv_item) as ImageView
         fun bind(photo:Photo){
-            item.layoutParams.width=100
-            item.layoutParams.height=100
             item.setImageURI(photo.uri)
         }
     }
