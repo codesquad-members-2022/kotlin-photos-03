@@ -1,5 +1,6 @@
 package com.example.photos
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,12 +10,13 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private val requestCodeImageGet = 100
@@ -23,9 +25,9 @@ class MainActivity : AppCompatActivity() {
         android.Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
@@ -40,11 +42,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(this, 4)
 
-        val button = findViewById<Button>(R.id.button_image)
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val uri = it.data?.data
+            }
+        }
 
         button.setOnClickListener{
             if (checkPermissions()) {
-                loadImage()
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "image/*"
+                activityResultLauncher.launch(intent)
             }
         }
     }
@@ -69,22 +78,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Override
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        val image = findViewById<ImageView>(R.id.imageView)
-
-        if (requestCode == requestCodeImageGet) {
-            val uri = data?.data
-            try {
-                val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-                image.setImageBitmap(bitmap)
-            } catch (e: Exception) {
-            }
-        }
-    }
-
     fun checkPermissions(): Boolean {
         val denyPermissions = ArrayList<String>()
 
@@ -99,14 +92,5 @@ class MainActivity : AppCompatActivity() {
             return false
         }
         return true
-    }
-
-    fun loadImage() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-
-        startActivityForResult(Intent.createChooser(intent, "Load Picture"), requestCodeImageGet)
-    }
     }
 }
