@@ -22,12 +22,13 @@ class StoreActivity : AppCompatActivity() {
 
         val button = findViewById<ImageButton>(R.id.button)
 
+        
+
+
         CoroutineScope(Dispatchers.Main).launch {
             val json = withContext(Dispatchers.IO) { // changeJson 값을 대입받는다, 코루틴중에 통신기능은 IO내부에서 해야함.. io는 뭐지?
                 changeJson(networking())
             }
-            Log.d("CoroutineScope", "${json[0]}")
-            Log.d("CoroutineScope", "${json[54]}")
         }
     }
 
