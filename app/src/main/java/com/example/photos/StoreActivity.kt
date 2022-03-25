@@ -22,7 +22,7 @@ class StoreActivity : AppCompatActivity() {
 
         val button = findViewById<ImageButton>(R.id.button)
 
-        
+
 
 
         CoroutineScope(Dispatchers.Main).launch {
