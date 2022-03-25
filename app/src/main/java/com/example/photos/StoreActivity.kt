@@ -24,6 +24,7 @@ class StoreActivity : AppCompatActivity() {
 
         val recyclerView= findViewById<RecyclerView>(R.id.recycler_doodle_view)
         val button = findViewById<ImageButton>(R.id.button)
+        val buttonBack = findViewById<ImageButton>(R.id.button_back)
         val adapter = DoodleAdapter(JSonDiffCallback())
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(this, 4)
@@ -35,35 +36,37 @@ class StoreActivity : AppCompatActivity() {
                 adapter.submitList(it)
             }
         }
-    }
 
-    fun networking(): String {
-        var str = ""
-        try {
-            val urlText = URL("https://public.codesquad.kr/jk/doodle.json")
-
-            val urlConnection = urlText.openConnection() as HttpURLConnection
-            urlConnection.requestMethod = "GET"
-            if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                val streamReader = InputStreamReader(urlConnection.inputStream)
-                val bufferd = BufferedReader(streamReader)
-
-                val content = StringBuilder()
-                while (true) {
-                    val line = bufferd.readLine() ?: break
-                    str = content.append(line).toString()
-
-                    bufferd.close()
-                    urlConnection.disconnect()
-                    runOnUiThread {
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        buttonBack.setOnClickListener {
+            finish()
         }
-        return str
     }
+}
+
+fun networking(): String {
+    var str = ""
+    try {
+        val urlText = URL("https://public.codesquad.kr/jk/doodle.json")
+
+        val urlConnection = urlText.openConnection() as HttpURLConnection
+        urlConnection.requestMethod = "GET"
+        if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
+            val streamReader = InputStreamReader(urlConnection.inputStream)
+            val bufferd = BufferedReader(streamReader)
+
+            val content = StringBuilder()
+            while (true) {
+                val line = bufferd.readLine() ?: break
+                str = content.append(line).toString()
+
+                bufferd.close()
+                urlConnection.disconnect()
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return str
 }
 
 suspend fun changeJson(json: String): List<JsonImage> {
