@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,14 +22,17 @@ class StoreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sub)
 
+        val recyclerView= findViewById<RecyclerView>(R.id.recycler_doodle_view)
         val button = findViewById<ImageButton>(R.id.button)
-
-
-
-
+        val adapter = DoodleAdapter(JSonDiffCallback())
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
         CoroutineScope(Dispatchers.Main).launch {
             val json = withContext(Dispatchers.IO) { // changeJson 값을 대입받는다, 코루틴중에 통신기능은 IO내부에서 해야함.. io는 뭐지?
                 changeJson(networking())
+            }
+            json.let{
+                adapter.submitList(it)
             }
         }
     }
@@ -73,6 +78,9 @@ suspend fun changeJson(json: String): List<JsonImage> {
 
         photolist.add(JsonImage(title, image))
         Log.d("josondata", "$title $image")
+
     }
     return photolist
 }
+
+
