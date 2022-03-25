@@ -1,11 +1,14 @@
 package com.example.photos
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -23,24 +26,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button = findViewById<ImageButton>(R.id.button)
+        val doodleBtn= findViewById<ImageButton>(R.id.btn_move_doodle)
+        val galleryBtn= findViewById<Button>(R.id.btn_gallery)
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val uri = it.data?.data
+            }
+        }
 
-//        activityResultLauncher =
-//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//            if (it.resultCode == Activity.RESULT_OK) {
-//                val uri = it.data?.data
-//            }
-//        }
-//
-//        button.setOnClickListener{
-//            if (checkPermissions()) {
-//                val intent = Intent(Intent.ACTION_GET_CONTENT)
-//                intent.type = "image/*"
-//                activityResultLauncher.launch(intent)
-//            }
-//        }
+        galleryBtn.setOnClickListener{
+            if (checkPermissions()) {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "image/*"
+                activityResultLauncher.launch(intent)
+            }
+        }
 
-        button.setOnClickListener {
+        doodleBtn.setOnClickListener {
             val intent = Intent(this, StoreActivity::class.java)
             startActivity(intent)
         }
